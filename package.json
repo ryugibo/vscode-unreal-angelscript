@@ -3,7 +3,7 @@
     "displayName": "Unreal Angelscript",
     "description": "Language Server and Debug Adapter for use with the UnrealEngine-Angelscript plugin from https://github.com/Hazelight/UnrealEngine-Angelscript",
     "version": "1.9.4",
-    "publisher": "Hazelight",
+    "publisher": "ryugibo",
     "icon": "resources/angelscript_unreal.png",
     "engines": {
         "vscode": "^1.65.0"
@@ -18,7 +18,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/Hazelight/vscode-unreal-angelscript"
+        "url": "https://github.com/ryugibo/vscode-unreal-angelscript"
     },
     "main": "./extension/dist/extension.js",
     "contributes": {
