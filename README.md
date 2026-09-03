@@ -1,3 +1,12 @@
+# Unreal Angelscript (Open VSX Community Build)
+
+> [!NOTE]
+> **Community Distribution Notice & Attribution**  
+> This extension is a community build maintained and distributed to Open VSX by [@ryugibo](https://github.com/ryugibo).  
+> The original extension is developed by **Hazelight Games AB** and licensed under the [MIT License](LICENSE).  
+> - **Upstream Repository**: [Hazelight/vscode-unreal-angelscript](https://github.com/Hazelight/vscode-unreal-angelscript)  
+> - **Official Documentation**: https://angelscript.hazelight.se  
+
 Language Server and Debug Adapter for use with the UnrealEngine-Angelscript plugin from https://angelscript.hazelight.se
 
 ## Getting Started
