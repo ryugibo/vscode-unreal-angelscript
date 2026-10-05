@@ -1429,7 +1429,7 @@ access_list
     }
 
 access_class
-     = name:(identifier / "*" { return Identifier(range(), text()); })
+     = name:(([A-Za-z0-9.:]+ / "*") { return Identifier(range(), text()); })
        mods:(_ "(" _ @access_mod_list? _ ")")?
     {
         let node = Compound(range(), n.AccessClass, null);

@@ -4696,8 +4696,13 @@ function DetectNodeSymbols(scope : ASScope, statement : ASStatement, node : any,
                             }
                             else
                             {
-                                if (!scope.module.isEditingNode(statement, cls.className) && InitialParseDone)
-                                    AddUnknownSymbol(scope, statement, cls.className, false);
+                                // The access specifier might be referencing a module path, in which case we don't want to
+                                // highlight it in red
+                                if (cls.className.value.indexOf(".") == -1)
+                                {
+                                    if (!scope.module.isEditingNode(statement, cls.className) && InitialParseDone)
+                                        AddUnknownSymbol(scope, statement, cls.className, false);
+                                }
                             }
                         }
                     }

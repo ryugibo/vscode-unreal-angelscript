@@ -1931,8 +1931,16 @@ export class DBAccessSpecifier
                 }
                 else if (fromFunction)
                 {
-                    clsApplies = (fromFunction.name == cls.accessName);
+                    if (fromFunction.name == cls.accessName)
+                        clsApplies = true;
+                    else if (fromFunction.namespace && fromFunction.namespace.getQualifiedNamespace() == cls.accessName)
+                        clsApplies = true;
                 }
+
+                if (!clsApplies && fromFunction && fromFunction.declaredModule.startsWith(cls.accessName))
+                    clsApplies = true;
+                else if (!clsApplies && !fromFunction && fromType && fromType.declaredModule.startsWith(cls.accessName))
+                    clsApplies = true;
 
                 if (clsApplies)
                 {

@@ -378,6 +378,7 @@ function peg$parse(input, options) {
   const peg$r19 = /^[A-Za-z_]/;
   const peg$r20 = /^[A-Za-z_0-9]/;
   const peg$r21 = /^[|:]/;
+  const peg$r22 = /^[A-Za-z0-9.:]/;
 
   const peg$e0 = peg$literalExpectation("/", false);
   const peg$e1 = peg$literalExpectation("*", false);
@@ -521,6 +522,7 @@ function peg$parse(input, options) {
   const peg$e139 = peg$literalExpectation("private", false);
   const peg$e140 = peg$literalExpectation("protected", false);
   const peg$e141 = peg$literalExpectation("public", false);
+  const peg$e142 = peg$classExpectation([["A", "Z"], ["a", "z"], ["0", "9"], ".", ":"], false, false, false);
 
   function peg$f0() {    return null;  }
   function peg$f1(comment, decl) {
@@ -12247,9 +12249,30 @@ function peg$parse(input, options) {
     let s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
     s0 = peg$currPos;
-    s1 = peg$parseidentifier();
-    if (s1 === peg$FAILED) {
-      s1 = peg$currPos;
+    s1 = peg$currPos;
+    s2 = [];
+    s3 = input.charAt(peg$currPos);
+    if (peg$r22.test(s3)) {
+      peg$currPos++;
+    } else {
+      s3 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e142); }
+    }
+    if (s3 !== peg$FAILED) {
+      while (s3 !== peg$FAILED) {
+        s2.push(s3);
+        s3 = input.charAt(peg$currPos);
+        if (peg$r22.test(s3)) {
+          peg$currPos++;
+        } else {
+          s3 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$e142); }
+        }
+      }
+    } else {
+      s2 = peg$FAILED;
+    }
+    if (s2 === peg$FAILED) {
       if (input.charCodeAt(peg$currPos) === 42) {
         s2 = peg$c1;
         peg$currPos++;
@@ -12257,12 +12280,12 @@ function peg$parse(input, options) {
         s2 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$e1); }
       }
-      if (s2 !== peg$FAILED) {
-        peg$savedPos = s1;
-        s2 = peg$f146();
-      }
-      s1 = s2;
     }
+    if (s2 !== peg$FAILED) {
+      peg$savedPos = s1;
+      s2 = peg$f146();
+    }
+    s1 = s2;
     if (s1 !== peg$FAILED) {
       s2 = peg$currPos;
       s3 = peg$parse_();
