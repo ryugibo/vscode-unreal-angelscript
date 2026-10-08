@@ -1399,6 +1399,39 @@ function AddMacroActions(context : CodeActionContext)
                 if (dbType)
                 {
                     let scopeFunc = dbType.getMethod(context.statement.ast.name.value);
+
+                    if (scriptfiles.GetScriptSettings().useAngelscriptHaze && scopeFunc && (!scopeFunc.returnType || scopeFunc.returnType == "void"))
+                    {
+                        if (scopeFunc.name.startsWith("Crumb") && scopeFunc.name.length > 5 && scopeFunc.name[5].toUpperCase() == scopeFunc.name[5])
+                        {
+                            context.actions.push(<CodeAction> {
+                                kind: CodeActionKind.QuickFix,
+                                title: `Add UFUNCTION(CrumbFunction)`,
+                                source: "angelscript",
+                                data: {
+                                    uri: context.module.uri,
+                                    type: "insertMacro",
+                                    macro: "UFUNCTION(CrumbFunction)",
+                                    position: context.range_start,
+                                }
+                            });
+                        }
+                        else if (scopeFunc.name.startsWith("Net") && scopeFunc.name.length > 3 && scopeFunc.name[3].toUpperCase() == scopeFunc.name[3])
+                        {
+                            context.actions.push(<CodeAction> {
+                                kind: CodeActionKind.QuickFix,
+                                title: `Add UFUNCTION(NetFunction)`,
+                                source: "angelscript",
+                                data: {
+                                    uri: context.module.uri,
+                                    type: "insertMacro",
+                                    macro: "UFUNCTION(NetFunction)",
+                                    position: context.range_start,
+                                }
+                            });
+                        }
+                    }
+
                     if (scopeFunc
                         && scopeFunc.isConst
                         && scopeFunc.returnType
@@ -2056,6 +2089,46 @@ function AddGenerateMethodActions(context : CodeActionContext)
         if (returnType == "float32")
             returnType = "float";
 
+        if (scriptfiles.GetScriptSettings().useAngelscriptHaze && returnType == "void" && !isInConstMethod)
+        {
+            if (functionName.startsWith("Crumb") && functionName.length > 5 && functionName[5].toUpperCase() == functionName[5])
+            {
+                context.actions.push(<CodeAction> {
+                    kind: CodeActionKind.RefactorExtract,
+                    title: `Generate CrumbFunction: ${returnType} ${functionName}(${args})`,
+                    source: "angelscript",
+                    data: {
+                        uri: context.module.uri,
+                        type: "methodFromUsage",
+                        name: functionName,
+                        returnType: returnType,
+                        args: args,
+                        const: false,
+                        position: callPosition,
+                        macro: "UFUNCTION(CrumbFunction)",
+                    }
+                });
+            }
+            else if (functionName.startsWith("Net") && functionName.length > 3 && functionName[3].toUpperCase() == functionName[3])
+            {
+                context.actions.push(<CodeAction> {
+                    kind: CodeActionKind.RefactorExtract,
+                    title: `Generate NetFunction: ${returnType} ${functionName}(${args})`,
+                    source: "angelscript",
+                    data: {
+                        uri: context.module.uri,
+                        type: "methodFromUsage",
+                        name: functionName,
+                        returnType: returnType,
+                        args: args,
+                        const: false,
+                        position: callPosition,
+                        macro: "UFUNCTION(NetFunction)",
+                    }
+                });
+            }
+        }
+
         if (!isInConstMethod)
         {
             context.actions.push(<CodeAction> {
@@ -2150,6 +2223,8 @@ function ResolveGenerateMethod(asmodule : scriptfiles.ASModule, action : CodeAct
 {
     let [insertPosition, indent, prefix, suffix] = FindInsertPositionForGeneratedMethod(asmodule, data.position);
     let snippet = prefix;
+    if (data.macro)
+        snippet += indent + data.macro + "\n";
     snippet += `${indent}${data.returnType} ${data.name}(${data.args})`;
     if(data.const)
         snippet += " const";
