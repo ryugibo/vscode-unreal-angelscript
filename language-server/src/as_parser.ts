@@ -2095,11 +2095,15 @@ function GenerateTypeInformation(scope : ASScope)
             dbfunc.isConstructor = true;
             scope.dbfunc = dbfunc;
 
+            if (constrdef.documentation)
+                dbfunc.documentation = typedb.FormatDocumentationComment(constrdef.documentation);
+            else if (scope.parentscope && scope.parentscope.dbtype)
+                dbfunc.documentation = scope.parentscope.dbtype.documentation;
+
             // Constructor gets added to the namespace as a global function instead
-            if (scope.parentscope)
+            if (scope.parentscope && scope.parentscope.dbtype)
             {
                 let namespace = scope.parentscope.getNamespace();
-                dbfunc.documentation = scope.parentscope.dbtype.documentation;
                 dbfunc.returnType = scope.parentscope.dbtype.name;
 
                 scope.module.globalSymbols.push(dbfunc);

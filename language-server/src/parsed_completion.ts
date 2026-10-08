@@ -620,6 +620,11 @@ export function Signature(asmodule: scriptfiles.ASModule, position: Position): S
             else
                 activeArg = bestFunctionActiveArg = context.subOuterArgumentIndex;
         }
+        else if (activeArg == -1)
+        {
+            if (!argContext.isAfterNamedArgument)
+                activeArg = context.subOuterArgumentIndex;
+        }
 
         let skipFirstArg = false;
         if (func.isMixin)
